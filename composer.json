@@ -1,0 +1,33 @@
+{
+    "name": "valthebald/behat-screenshot-image-driver-rsync",
+    "type": "library",
+    "description": "Image driver for bex/behat-screenshot extension that uploads files to remote server using rsync",
+    "keywords": ["tdd","bdd","behat", "behat-screenshot"],
+    "homepage": "https://github.com/valthebald/behat-screenshot-image-driver-rsync",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Valery Lourie",
+            "email": "valerylourie@gmail.com",
+            "homepage": "https://github.com/valthebald",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php" : ">=5.4",
+        "bex/behat-screenshot": "^1.0"
+    },
+    "require-dev": {
+        "phpspec/phpspec" : "2.4.0-alpha2",
+        "bex/behat-test-runner": "^1.1",
+        "behat/mink-selenium2-driver": "^1.3.0"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bex\\Behat\\ScreenshotExtension\\Driver\\": "src"
+        }
+    }
+}
