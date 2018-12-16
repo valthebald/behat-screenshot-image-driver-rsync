@@ -5,7 +5,7 @@ namespace Bex\Behat\ScreenshotExtension\Driver;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class UploadRsync implements ImageDriverInterface {
+class Rsync implements ImageDriverInterface {
 
   /**
    * @var string
