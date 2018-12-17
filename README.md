@@ -1,7 +1,8 @@
 ImageDriver-Rsync for Behat-ScreenshotExtension
 =========================
 
-This package is an image driver for the [bex/behat-screenshot](https://github.com/elvetemedve/behat-screenshot) behat extension which can upload the screenshot to [UploadPie](http://uploadpie.com) and print the url of the uploaded image.
+This package is an image driver for the [bex/behat-screenshot](https://github.com/elvetemedve/behat-screenshot) behat extension 
+which uploads screenshots to remote server using rsync protocol.
 
 Installation
 ------------
@@ -26,27 +27,26 @@ default:
 
 Required parameters:
 
-```yml
+```yaml
 default:
   extensions:
     Bex\Behat\ScreenshotExtension:
       active_image_drivers: rsync
       image_drivers:
         rsync:
-          auth: 'API_KEY' # can be your authentication key or and environment variable name
+          server: remote.example.com
+          username: username
+          path: /full/path/to/screenshots/folder # No trailing slash here!
 ```
 
-You can configure the expire time of the uploaded image (by default it is 30m) like this:
-
-```yml
-default:
-  extensions:
-    Bex\Behat\ScreenshotExtension:
-      active_image_drivers: rsync
+Optional parameters:
+```yaml
       image_drivers:
         rsync:
-          expire: '1h' # possible values: '30m', '1h', '6h', '1d', '1w'
+          ssh_options: "ssh -i private_file.pem -p 2222" # This parameter will be passed as -e to rsync command
+          preview_url: "https://remote.example.com/scheenshots/folder" # If screenshots folder is accessible via HTTP/S
 ```
+
 
 Usage
 -----

@@ -22,6 +22,20 @@ class Rsync implements ImageDriverInterface {
    */
   private $path;
 
+  /**
+   * Optional URL to view uploaded screenshots.
+   *
+   * @var string
+   */
+  private $preview_url;
+
+  /**
+   * Optional options to pass to SSH.
+   *
+   * @var string
+   */
+  private $ssh_options;
+
     /**
      * @param  ArrayNodeDefinition $builder
      */
@@ -40,6 +54,12 @@ class Rsync implements ImageDriverInterface {
           ->isRequired()
           ->cannotBeEmpty()
           ->end()
+          ->scalarNode('preview_url')
+          ->defaultValue('')
+          ->end()
+          ->scalarNode('ssh_options')
+          ->defaultValue('')
+          ->end()
           ->end();
     }
 
@@ -51,6 +71,8 @@ class Rsync implements ImageDriverInterface {
       $this->server = $config['server'];
       $this->username = $config['username'];
       $this->path = $config['path'];
+      $this->preview_url = $config['preview_url'];
+      $this->ssh_options = $config['ssh_options'];
     }
 
     /**
@@ -62,7 +84,14 @@ class Rsync implements ImageDriverInterface {
     public function upload($binaryImage, $filename) {
       $tmp_filename = "/tmp/$filename-" . time();
       file_put_contents($tmp_filename, $binaryImage);
-      exec("rsync $tmp_filename {$this->username}@{$this->server}:{$this->path}/$filename");
+      $ssh_options = $this->ssh_options ? '-e "' . $this->ssh_options . '"' : '';
+      exec("rsync $ssh_options $tmp_filename {$this->username}@{$this->server}:{$this->path}/$filename");
+      if ($this->preview_url) {
+        return "{$this->preview_url}/$filename";
+      }
+      else {
+        return "{$this->path}/$filename";
+      }
     }
 
 }
