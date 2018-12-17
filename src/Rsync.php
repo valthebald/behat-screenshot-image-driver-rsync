@@ -4,8 +4,16 @@ namespace Bex\Behat\ScreenshotExtension\Driver;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Rsync implements ImageDriverInterface {
+
+  /**
+   * Filesystem service.
+   *
+   * @var \Symfony\Component\Filesystem\Filesystem
+   */
+  private $filesystem;
 
   /**
    * @var string
@@ -63,7 +71,11 @@ class Rsync implements ImageDriverInterface {
           ->end();
     }
 
-    /**
+    public function __construct(Filesystem $filesystem = NULL) {
+      $this->filesystem = $filesystem ? $filesystem : new Filesystem();
+    }
+
+  /**
      * @param  ContainerBuilder $container
      * @param  array            $config
      */
@@ -83,7 +95,7 @@ class Rsync implements ImageDriverInterface {
      */
     public function upload($binaryImage, $filename) {
       $tmp_filename = "/tmp/$filename-" . time();
-      file_put_contents($tmp_filename, $binaryImage);
+      $this->filesystem->dumpFile($tmp_filename, $binaryImage);
       $ssh_options = $this->ssh_options ? '-e "' . $this->ssh_options . '"' : '';
       exec("rsync $ssh_options $tmp_filename {$this->username}@{$this->server}:{$this->path}/$filename");
       if ($this->preview_url) {
